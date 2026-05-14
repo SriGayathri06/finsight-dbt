@@ -100,12 +100,13 @@ finsight/
 - [x] dbt project initialized and connected to Snowflake (`dbt debug` passing)
 - [x] GitHub repo initialized with `.gitignore` (credentials excluded)
 
-### 🔄 Milestone 2 — Staging Models (In Progress)
-- [ ] `stg_transactions.sql` — deduplicate, cast types, handle nulls
-- [ ] `stg_customers.sql` — standardize names, filter invalid records
-- [ ] `stg_merchants.sql` — clean categories, trim whitespace
-- [ ] `schema.yml` — source definitions and out-of-the-box dbt tests (`not_null`, `unique`)
-- [ ] `dbt run` + `dbt test` passing end to end
+### ✅ Milestone 2 — Staging Models (Completed)
+- [x] `stg_transactions.sql` — deduplicate, cast types, handle nulls
+- [x] `stg_customers.sql` — standardize names, filter invalid records
+- [x] `stg_merchants.sql` — clean categories, trim whitespace
+- [x] `schema.yml` — source definitions and out-of-the-box dbt tests
+- [x] `dbt run` + `dbt test` passing 11/11 ✅
+- [x] Fixed staging_staging schema duplication via generate_schema_name macro
 
 ### 📋 Milestone 3 — Marts & KPIs (Planned)
 - [ ] `mart_customer_spend.sql` — monthly spend aggregation per customer
