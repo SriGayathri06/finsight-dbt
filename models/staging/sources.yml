@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: raw
+    database: finsight_db
+    schema: raw
+    description: "Raw banking transaction data loaded as-is from source systems"
+    
+    tables:
+      - name: customers
+        description: "Raw customer records from onboarding system"
+        
+      - name: merchants
+        description: "Raw merchant reference data"
+        
+      - name: transactions
+        description: "Raw banking transactions - may contain nulls and duplicates"
