@@ -108,11 +108,13 @@ finsight/
 - [x] `dbt run` + `dbt test` passing 11/11 ✅
 - [x] Fixed staging_staging schema duplication via generate_schema_name macro
 
-### 📋 Milestone 3 — Marts & KPIs (Planned)
-- [ ] `mart_customer_spend.sql` — monthly spend aggregation per customer
-- [ ] `mart_category_spend.sql` — spend by merchant category
-- [ ] `mart_top_merchants.sql` — top merchants ranked by total spend
-- [ ] Custom dbt tests for business logic validation
+### ✅ Milestone 3 — Marts & KPIs (Completed)
+- [x] mart_customer_spend.sql
+- [x] mart_category_spend.sql
+- [x] mart_top_merchants.sql
+- [x] schema.yml — mart level tests
+- [x] Custom dbt test — assert_positive_transaction_amount
+- [x] dbt run + dbt test passing 22/22 ✅
 
 ### 📋 Milestone 4 — Documentation & Lineage (Planned)
 - [ ] Column-level descriptions in all `schema.yml` files
