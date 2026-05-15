@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: mart_customer_spend
+    description: "Monthly spend aggregations per customer — powers personal finance dashboard"
+    columns:
+      - name: customer_id
+        description: "Unique customer identifier"
+        tests:
+          - not_null
+      - name: transaction_month
+        description: "Month of transactions truncated to first day"
+        tests:
+          - not_null
+      - name: total_spend
+        description: "Total spend amount for the customer in that month"
+        tests:
+          - not_null
+      - name: transaction_count
+        description: "Number of transactions in that month"
+        tests:
+          - not_null
+
+  - name: mart_category_spend
+    description: "Monthly spend breakdown by merchant category"
+    columns:
+      - name: category
+        description: "Merchant category eg. Groceries, Dining, Travel"
+        tests:
+          - not_null
+      - name: transaction_month
+        description: "Month of transactions truncated to first day"
+        tests:
+          - not_null
+      - name: pct_of_monthly_spend
+        description: "Percentage this category contributes to total monthly spend"
+        tests:
+          - not_null
+
+  - name: mart_top_merchants
+    description: "Merchants ranked by total spend per month"
+    columns:
+      - name: merchant_id
+        description: "Unique merchant identifier"
+        tests:
+          - not_null
+      - name: spend_rank
+        description: "Merchant rank by total spend within that month"
+        tests:
+          - not_null
+      - name: total_spend
+        description: "Total spend at this merchant in that month"
+        tests:
+          - not_null
