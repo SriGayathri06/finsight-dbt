@@ -15,3 +15,6 @@ sources:
         
       - name: transactions
         description: "Raw banking transactions - may contain nulls and duplicates"
+
+      - name: transactions_json
+        description: "Raw JSON transactions from payment API - semi-structured VARIANT data"

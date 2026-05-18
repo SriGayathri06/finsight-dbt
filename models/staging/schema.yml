@@ -44,3 +44,26 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: stg_transactions_json
+    description: "Flattened and cleaned JSON transactions from payment API"
+    columns:
+      - name: transaction_id
+        description: "Unique transaction identifier from raw table"
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Customer identifier extracted from JSON"
+        tests:
+          - not_null
+      - name: amount
+        description: "Transaction amount extracted and cast from JSON"
+        tests:
+          - not_null
+      - name: status
+        description: "Transaction status uppercased"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['COMPLETED', 'PENDING', 'FAILED']
