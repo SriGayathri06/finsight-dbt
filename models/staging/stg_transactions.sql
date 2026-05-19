@@ -1,6 +1,21 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='transaction_id',
+        on_schema_change='sync_all_columns'
+    )
+}}
+
 with source as (
 
     select * from {{ source('raw', 'transactions') }}
+
+    {% if is_incremental() %}
+        where transaction_date > (
+            select max(transaction_date)
+            from {{ this }}
+        )
+    {% endif %}
 
 ),
 
