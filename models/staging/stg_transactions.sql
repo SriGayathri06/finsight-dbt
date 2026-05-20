@@ -1,6 +1,21 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='transaction_id',
+        on_schema_change='sync_all_columns'
+    )
+}}
+
 with source as (
 
     select * from {{ source('raw', 'transactions') }}
+
+    {% if is_incremental() %}
+        where transaction_date > (
+            select max(transaction_date)
+            from {{ this }}
+        )
+    {% endif %}
 
 ),
 
@@ -25,6 +40,8 @@ final as (
         transaction_date,
         upper(transaction_type)                    as transaction_type,
         upper(status)                              as status,
+        coalesce(payment_method, 'unknown')        as payment_method,
+        coalesce(transaction_channel, 'unknown')   as transaction_channel,
         current_timestamp()                        as _loaded_at
 
     from deduplicated
