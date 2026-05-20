@@ -40,6 +40,8 @@ final as (
         transaction_date,
         upper(transaction_type)                    as transaction_type,
         upper(status)                              as status,
+        coalesce(payment_method, 'unknown')        as payment_method,
+        coalesce(transaction_channel, 'unknown')   as transaction_channel,
         current_timestamp()                        as _loaded_at
 
     from deduplicated
