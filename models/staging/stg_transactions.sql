@@ -10,11 +10,21 @@ with source as (
 
     select * from {{ source('raw', 'transactions') }}
 
-    {% if is_incremental() %}
+    {% if is_incremental() and not var('force_replace', false) %}
+        -- normal incremental: only new rows
         where transaction_date > (
             select max(transaction_date)
             from {{ this }}
         )
+
+    {% elif is_incremental() and var('force_replace', false) %}
+        -- surgical overwrite: targeted partition refresh
+        -- used for data corruption fixes and backfills
+        -- requires explicit start_date and end_date vars
+        where transaction_date
+            between '{{ var("start_date") }}'
+            and '{{ var("end_date") }}'
+
     {% endif %}
 
 ),
