@@ -138,11 +138,47 @@ finsight/
 - [x] Updated `sources.yml` with new JSON source
 - [x] dbt run PASS 7/7 + dbt test PASS 28/28 ✅
 
-### 📋 Milestone 6 — Incremental Models (Planned)
-- [ ] Convert `stg_transactions` to incremental materialization
-- [ ] Process only new records on each run
-- [ ] Understand `is_incremental()` macro
-- [ ] Compare full refresh vs incremental run performance
+### ✅ Milestone 6 — Incremental Models (Completed)
+
+#### Core Incremental Model
+- [x] Converted `stg_transactions` from view to incremental materialization
+- [x] Added `unique_key=transaction_id` for MERGE strategy on duplicates
+- [x] Added `on_schema_change='sync_all_columns'` for automatic schema evolution
+- [x] Added `is_incremental()` watermark filter for processing new rows only
+- [x] Verified: full load 16 rows → incremental load 3 new rows only ✅
+
+#### 6a — Schema Drift Detection + Zero-Downtime Fix
+- [x] Simulated upstream schema change — `payment_method` and `transaction_channel` added to raw
+- [x] Proved silent failure — dbt ran SUCCESS but silently dropped new columns
+- [x] Built `assert_no_schema_drift.sql` — queries `information_schema` to detect raw vs staging column mismatch
+- [x] Test FAILS immediately when drift detected — acts as CI/CD deployment gate
+- [x] Fixed by updating model SELECT + `on_schema_change` auto-issued `ALTER TABLE`
+- [x] Zero downtime schema evolution — no full refresh, no manual DDL ✅
+
+#### 6b — Data Corruption — Surgical Overwrite Pattern
+- [x] Simulated upstream bug — 10x amounts for March transactions T034-T038
+- [x] Proved incremental watermark silently ignored corruption — SUCCESS 0 rows
+- [x] Verified corrupted KPIs in `mart_customer_spend` — Carol White showing $1,858 instead of $778
+- [x] Evaluated 4 recovery approaches:
+  - [x] Partition vars only → watermark conflict, 0 rows processed ❌
+  - [x] Delete + Reinsert → works but not auditable, risky ❌
+  - [x] Explicit merge strategy → no-op, same problem ❌
+  - [x] Surgical overwrite via `force_replace` var → industry standard ✅
+- [x] Implemented `force_replace` var in `stg_transactions.sql` to bypass watermark
+- [x] Marts rebuilt → KPIs corrected → P1 resolved ✅
+- [x] dbt run PASS 7/7 + dbt test PASS 29/29 ✅
+
+#### 6c — Late Arriving Data (Planned)
+- [ ] Simulate pipeline downtime — transactions arrive with old dates
+- [ ] Prove watermark silently skips late arriving data
+- [ ] Implement buffer window strategy
+- [ ] Verify all late records correctly processed
+
+### 📋 Milestone 7 — SCD Type 2 Snapshots (Planned)
+- [ ] Track customer dimension changes over time (city, email)
+- [ ] Track merchant category changes over time
+- [ ] Implement `dbt snapshot` with `check` strategy
+- [ ] Query historical state of dimensions at any point in time
 ---
 
 ## ⚙️ Tech Stack
