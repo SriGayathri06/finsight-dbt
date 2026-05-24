@@ -168,11 +168,21 @@ finsight/
 - [x] Marts rebuilt → KPIs corrected → P1 resolved ✅
 - [x] dbt run PASS 7/7 + dbt test PASS 29/29 ✅
 
-#### 6c — Late Arriving Data (Planned)
-- [ ] Simulate pipeline downtime — transactions arrive with old dates
-- [ ] Prove watermark silently skips late arriving data
-- [ ] Implement buffer window strategy
-- [ ] Verify all late records correctly processed
+#### 6c — Late Arriving Data — System Clock Watermark
+- [x] Proved business date watermark silently skips backdated records
+- [x] Verified T041, T042, T043 exist in raw but missing in staging
+- [x] Proved watermark is culprit — `LATE_DATA_SKIPPED = TRUE` query
+- [x] Proved March KPIs incomplete — Carol White missing T041, David Lee missing T042
+- [x] Compared buffer window vs system clock watermark approaches
+- [x] Added `loaded_at` column to `raw.transactions` with Snowflake DDL workaround
+- [x] Migrated incremental watermark from `transaction_date` to `loaded_at`
+- [x] Debugged chicken-and-egg schema problem across 4 model versions
+- [x] Fixed with `--full-refresh` to initialize `_raw_loaded_at` column
+- [x] Updated `assert_no_schema_drift` with `known_renames` exclusion pattern
+- [x] Late arriving data T041, T042, T043 now flowing correctly to marts
+- [x] Carol White: 3 → 4 transactions, David Lee: 2 → 3 transactions ✅
+- [x] dbt test PASS 29/29 ✅
+- [x] Post-mortem documentation written for debugging journey
 
 ### 📋 Milestone 7 — SCD Type 2 Snapshots (Planned)
 - [ ] Track customer dimension changes over time (city, email)
