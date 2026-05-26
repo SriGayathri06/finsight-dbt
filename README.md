@@ -81,6 +81,7 @@ finsight/
 │       ├── mart_customer_spend.sql  # monthly spend per customer
 │       ├── mart_category_spend.sql  # spend breakdown by category
 │       ├── mart_top_merchants.sql   # top merchants by volume
+|       ├── mart_customer_spend_history.sql # Monthly spend with point-in-time customer dimension
 │       └── schema.yml               # mart-level tests + descriptions
 ├── seeds/                           # static reference data (if any)
 ├── tests/                           # custom dbt tests
@@ -184,11 +185,38 @@ finsight/
 - [x] dbt test PASS 29/29 ✅
 - [x] Post-mortem documentation written for debugging journey
 
-### 📋 Milestone 7 — SCD Type 2 Snapshots (Planned)
-- [ ] Track customer dimension changes over time (city, email)
-- [ ] Track merchant category changes over time
-- [ ] Implement `dbt snapshot` with `check` strategy
-- [ ] Query historical state of dimensions at any point in time
+### ✅ Milestone 7 — SCD Type 2 Snapshots (Completed)
+
+#### Core Snapshots
+- [x] `scd_customers.sql` — check strategy tracking email and city changes
+- [x] `scd_merchants.sql` — check strategy tracking category and city changes
+- [x] `invalidate_hard_deletes=True` — audit compliance for deleted records
+- [x] Simulated city change — Alice Johnson: Seattle → Austin verified ✅
+- [x] Simulated category change — Whole Foods: Groceries → Crypto verified ✅
+- [x] 2 snapshots passing ✅
+
+#### Mart Enhancement
+- [x] `mart_customer_spend_history.sql` — point-in-time join pattern
+- [x] Fallback join pattern for historical data predating snapshots
+- [x] Fixed case-sensitive status filter (`COMPLETED`)
+- [x] 35 rows verified in mart ✅
+- [x] 1 mart model passing ✅
+
+#### Key Patterns Implemented
+- [x] `dbt_valid_from` / `dbt_valid_to` temporal columns
+- [x] Point-in-time join: match transaction_date to snapshot validity window
+- [x] Fallback join: handle records that predate snapshot initialization
+- [x] SCD Type 2 vs partition refresh distinction documented
+
+### 📋 Milestone 8 — Advanced Testing + Observability (Planned)
+- [ ] Install `dbt-expectations` package
+- [ ] Add Great Expectations style tests (regex, range, row count)
+- [ ] Install `elementary-data` package for observability dashboard
+- [ ] Slack/email alerting on test failures
+- [ ] Anomaly detection on transaction amounts
+- [ ] Source freshness checks on raw tables
+- [ ] Data quality dashboard visible to whole team
+- [ ] Wire `stg_transactions_quarantine` to alerting
 ---
 
 ## ⚙️ Tech Stack
