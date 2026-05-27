@@ -73,19 +73,25 @@ A fintech startup — **FinSight Analytics** — ingests raw banking transaction
 finsight/
 ├── models/
 │   ├── staging/
-│   │   ├── stg_customers.sql        # cleaned customer records
-│   │   ├── stg_merchants.sql        # cleaned merchant records
-│   │   ├── stg_transactions.sql     # cleaned + deduplicated transactions
-│   │   └── schema.yml               # source definitions + dbt tests
+│   │   ├── stg_customers.sql
+│   │   ├── stg_merchants.sql
+│   │   ├── stg_transactions.sql        # incremental, loaded_at watermark
+│   │   ├── stg_transactions_json.sql   # semi-structured VARIANT column
+│   │   └── sources.yml / schema.yml
 │   └── marts/
-│       ├── mart_customer_spend.sql  # monthly spend per customer
-│       ├── mart_category_spend.sql  # spend breakdown by category
-│       ├── mart_top_merchants.sql   # top merchants by volume
-|       ├── mart_customer_spend_history.sql # Monthly spend with point-in-time customer dimension
-│       └── schema.yml               # mart-level tests + descriptions
-├── seeds/                           # static reference data (if any)
-├── tests/                           # custom dbt tests
-├── dbt_project.yml                  # dbt project config
+│       ├── mart_customer_spend.sql
+│       ├── mart_category_spend.sql
+│       ├── mart_top_merchants.sql
+│       ├── mart_customer_spend_history.sql  # point-in-time SCD2 join
+│       └── schema.yml
+├── snapshots/
+│   ├── scd_customers.sql               # SCD Type 2, check strategy
+│   └── scd_merchants.sql               # SCD Type 2, check strategy
+├── tests/
+│   ├── assert_no_schema_drift.sql
+│   ├── assert_positive_transaction_amount.sql
+│   └── assert_scd_no_overlapping_periods.sql
+├── dbt_project.yml
 └── README.md
 ```
 
